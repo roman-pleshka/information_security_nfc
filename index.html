@@ -11,6 +11,7 @@
     --red: #ff2200;
     --orange: #ff6600;
     --yellow: #ffcc00;
+    --green: #44ff88;
     --dark: #0a0a0a;
     --mid: #1a1a1a;
     --text: #e8e8e8;
@@ -30,8 +31,7 @@
 
   body::before {
     content: '';
-    position: fixed;
-    inset: 0;
+    position: fixed; inset: 0;
     background: repeating-linear-gradient(
       to bottom,
       transparent 0px, transparent 3px,
@@ -42,8 +42,7 @@
   }
 
   .bg-grid {
-    position: fixed;
-    inset: 0;
+    position: fixed; inset: 0;
     background-image:
       linear-gradient(rgba(255,34,0,0.04) 1px, transparent 1px),
       linear-gradient(90deg, rgba(255,34,0,0.04) 1px, transparent 1px);
@@ -51,7 +50,6 @@
     animation: gridShift 20s linear infinite;
     pointer-events: none;
   }
-
   @keyframes gridShift {
     0% { background-position: 0 0; }
     100% { background-position: 40px 40px; }
@@ -66,97 +64,135 @@
   .corner.bl { bottom: 20px; left: 20px; transform: scaleY(-1); }
   .corner.br { bottom: 20px; right: 20px; transform: scale(-1); }
 
-  .container {
-    max-width: 680px;
-    margin: 0 auto;
-    padding: 60px 24px 80px;
+  /* ── POPUP ── */
+  .popup-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.88);
+    z-index: 500;
+    display: flex; align-items: center; justify-content: center;
+    padding: 24px;
+    animation: fadeIn 0.4s forwards;
+  }
+  .popup-overlay.hiding {
+    animation: fadeOut 0.4s forwards;
+    pointer-events: none;
+  }
+  .popup-card {
+    background: var(--mid);
+    border: 1px solid #2a2a2a;
+    border-top: 4px solid var(--green);
+    max-width: 420px; width: 100%;
+    padding: 40px 36px;
+    text-align: center;
+    animation: popIn 0.4s 0.1s both;
     position: relative;
-    z-index: 1;
+  }
+  .popup-icon { font-size: 48px; margin-bottom: 20px; display: block; }
+  .popup-tag {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px; letter-spacing: 3px;
+    color: var(--green); text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .popup-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 36px; color: #fff;
+    line-height: 1.1; margin-bottom: 16px; letter-spacing: 1px;
+  }
+  .popup-title span { color: var(--green); }
+  .popup-text {
+    font-size: 14px; color: #aaa;
+    line-height: 1.7; margin-bottom: 28px;
+  }
+  .popup-text strong { color: #fff; }
+  .popup-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--green); color: #0a0a0a;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 12px; letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 12px 28px;
+    border: none; cursor: pointer;
+    clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 50%, calc(100% - 10px) 100%, 0 100%);
+    transition: opacity 0.2s;
+    font-weight: 600;
+  }
+  .popup-btn:hover { opacity: 0.85; }
+
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
+  @keyframes popIn {
+    from { transform: scale(0.92) translateY(16px); opacity: 0; }
+    to { transform: scale(1) translateY(0); opacity: 1; }
+  }
+
+  /* ── MAIN PAGE ── */
+  .container {
+    max-width: 680px; margin: 0 auto;
+    padding: 60px 24px 80px;
+    position: relative; z-index: 1;
   }
 
   .topbar {
-    display: flex;
-    align-items: center;
-    gap: 12px;
+    display: flex; align-items: center; gap: 12px;
     margin-bottom: 48px;
-    opacity: 0;
-    animation: fadeUp 0.5s 0.1s forwards;
+    opacity: 0; animation: fadeUp 0.5s 0.1s forwards;
   }
   .topbar-line { flex: 1; height: 1px; background: linear-gradient(90deg, var(--red), transparent); }
   .topbar-text {
     font-family: 'Share Tech Mono', monospace;
-    font-size: 11px;
-    color: var(--red);
-    letter-spacing: 3px;
-    text-transform: uppercase;
+    font-size: 11px; color: var(--red);
+    letter-spacing: 3px; text-transform: uppercase;
   }
 
   .nfc-icon-wrap {
-    display: flex;
-    justify-content: center;
+    display: flex; justify-content: center;
     margin-bottom: 32px;
-    opacity: 0;
-    animation: fadeUp 0.5s 0.2s forwards;
+    opacity: 0; animation: fadeUp 0.5s 0.2s forwards;
   }
   .nfc-icon { position: relative; width: 100px; height: 100px; }
   .nfc-ring {
-    position: absolute; inset: 0;
-    border-radius: 50%;
+    position: absolute; inset: 0; border-radius: 50%;
     border: 2px solid var(--red);
     animation: pulse-ring 2s ease-out infinite;
   }
   .nfc-ring:nth-child(2) { animation-delay: 0.6s; }
   .nfc-ring:nth-child(3) { animation-delay: 1.2s; }
   .nfc-core {
-    position: absolute; inset: 20px;
-    border-radius: 50%;
-    background: rgba(255,34,0,0.1);
-    border: 2px solid var(--red);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 26px;
+    position: absolute; inset: 20px; border-radius: 50%;
+    background: rgba(255,34,0,0.1); border: 2px solid var(--red);
+    display: flex; align-items: center; justify-content: center; font-size: 26px;
   }
-
   @keyframes pulse-ring {
     0% { transform: scale(0.8); opacity: 1; }
     100% { transform: scale(1.6); opacity: 0; }
   }
 
   .warning-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    background: var(--red);
-    color: #fff;
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--red); color: #fff;
     font-family: 'Share Tech Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 4px;
-    padding: 6px 16px;
-    margin-bottom: 16px;
+    font-size: 11px; letter-spacing: 4px;
+    padding: 6px 16px; margin-bottom: 16px;
     clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 50%, calc(100% - 10px) 100%, 0 100%);
-    opacity: 0;
-    animation: fadeUp 0.5s 0.3s forwards;
+    opacity: 0; animation: fadeUp 0.5s 0.3s forwards;
   }
 
   h1 {
     font-family: 'Bebas Neue', sans-serif;
     font-size: clamp(48px, 12vw, 88px);
-    line-height: 0.9;
-    letter-spacing: 2px;
-    margin-bottom: 8px;
-    opacity: 0;
-    animation: fadeUp 0.5s 0.35s forwards;
+    line-height: 0.9; letter-spacing: 2px; margin-bottom: 8px;
+    opacity: 0; animation: fadeUp 0.5s 0.35s forwards;
   }
   h1 .white { color: #fff; display: block; }
   h1 .highlight { color: var(--red); display: block; position: relative; }
   h1 .highlight::after {
     content: attr(data-text);
-    position: absolute;
-    left: 3px; top: 0;
+    position: absolute; left: 3px; top: 0;
     color: var(--orange);
     clip-path: polygon(0 30%, 100% 30%, 100% 55%, 0 55%);
     animation: glitch 4s infinite;
   }
-
   @keyframes glitch {
     0%, 90%, 100% { opacity: 0; transform: translateX(0); }
     92% { opacity: 1; transform: translateX(-4px); }
@@ -165,66 +201,51 @@
   }
 
   .subtitle {
-    font-size: 13px;
-    color: var(--muted);
+    font-size: 13px; color: var(--muted);
     font-family: 'Share Tech Mono', monospace;
-    letter-spacing: 2px;
-    margin-bottom: 48px;
-    opacity: 0;
-    animation: fadeUp 0.5s 0.4s forwards;
+    letter-spacing: 2px; margin-bottom: 48px;
+    opacity: 0; animation: fadeUp 0.5s 0.4s forwards;
   }
 
   .divider {
     height: 1px;
     background: linear-gradient(90deg, transparent, var(--red), var(--orange), transparent);
     margin: 32px 0;
-    opacity: 0;
-    animation: fadeUp 0.4s 0.45s forwards;
+    opacity: 0; animation: fadeUp 0.4s 0.45s forwards;
   }
 
   .main-message {
     background: rgba(255,34,0,0.05);
     border: 1px solid rgba(255,34,0,0.2);
     border-left: 4px solid var(--red);
-    padding: 24px;
-    margin-bottom: 32px;
-    opacity: 0;
-    animation: fadeUp 0.5s 0.5s forwards;
+    padding: 24px; margin-bottom: 32px;
+    opacity: 0; animation: fadeUp 0.5s 0.5s forwards;
   }
   .main-message p { font-size: 17px; line-height: 1.7; font-weight: 300; color: #d0d0d0; }
   .main-message strong { color: var(--yellow); font-weight: 600; }
 
   .threats-title {
     font-family: 'Share Tech Mono', monospace;
-    font-size: 11px;
-    color: var(--muted);
-    letter-spacing: 3px;
-    text-transform: uppercase;
+    font-size: 11px; color: var(--muted);
+    letter-spacing: 3px; text-transform: uppercase;
     margin-bottom: 16px;
-    opacity: 0;
-    animation: fadeUp 0.4s 0.6s forwards;
+    opacity: 0; animation: fadeUp 0.4s 0.6s forwards;
   }
 
   .threats { display: grid; gap: 12px; margin-bottom: 40px; }
-
   .threat {
     display: flex; gap: 16px; align-items: flex-start;
-    padding: 16px;
-    background: var(--mid);
+    padding: 16px; background: var(--mid);
     border: 1px solid #222;
-    position: relative; overflow: hidden;
-    opacity: 0;
+    position: relative; overflow: hidden; opacity: 0;
   }
   .threat::before {
-    content: '';
-    position: absolute; top: 0; left: 0;
-    width: 3px; height: 100%;
-    background: var(--orange);
+    content: ''; position: absolute; top: 0; left: 0;
+    width: 3px; height: 100%; background: var(--orange);
   }
   .threat:nth-child(1) { animation: fadeUp 0.4s 0.65s forwards; }
   .threat:nth-child(2) { animation: fadeUp 0.4s 0.72s forwards; }
   .threat:nth-child(3) { animation: fadeUp 0.4s 0.79s forwards; }
-
   .threat-icon { font-size: 22px; flex-shrink: 0; width: 36px; text-align: center; }
   .threat-body h3 { font-size: 13px; font-weight: 600; letter-spacing: 1px; margin-bottom: 4px; }
   .threat-body p { font-size: 13px; color: var(--muted); line-height: 1.5; }
@@ -232,39 +253,31 @@
   .steps { margin-bottom: 40px; opacity: 0; animation: fadeUp 0.5s 0.9s forwards; }
   .steps-title {
     font-family: 'Share Tech Mono', monospace;
-    font-size: 11px;
-    color: #44ff88;
-    letter-spacing: 3px;
-    margin-bottom: 16px;
-    text-transform: uppercase;
+    font-size: 11px; color: var(--green);
+    letter-spacing: 3px; margin-bottom: 16px; text-transform: uppercase;
   }
   .step {
     display: flex; gap: 16px; align-items: center;
-    padding: 12px 0;
-    border-bottom: 1px solid #1e1e1e;
+    padding: 12px 0; border-bottom: 1px solid #1e1e1e;
   }
   .step:last-child { border-bottom: none; }
   .step-num { font-family: 'Bebas Neue', sans-serif; font-size: 28px; color: rgba(68,255,136,0.3); flex-shrink: 0; width: 32px; }
   .step p { font-size: 14px; color: #bbb; line-height: 1.5; }
-  .step strong { color: #44ff88; }
+  .step strong { color: var(--green); }
 
   .awareness-box {
-    margin-top: 48px;
-    border-top: 1px solid #2a2a2a;
-    padding-top: 32px;
-    opacity: 0;
-    animation: fadeUp 0.5s 1.1s forwards;
+    margin-top: 48px; border-top: 1px solid #2a2a2a; padding-top: 32px;
+    opacity: 0; animation: fadeUp 0.5s 1.1s forwards;
   }
   .awareness-inner {
     background: linear-gradient(135deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
-    border: 1px solid #2a2a2a;
-    border-left: 4px solid #44ff88;
+    border: 1px solid #2a2a2a; border-left: 4px solid var(--green);
     padding: 28px;
   }
   .awareness-logo { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
   .awareness-logo-text { font-family: 'IBM Plex Sans', sans-serif; font-weight: 600; font-size: 18px; color: #fff; letter-spacing: 1px; }
   .awareness-logo-divider { width: 1px; height: 20px; background: #444; }
-  .awareness-logo-sub { font-family: 'Share Tech Mono', monospace; font-size: 10px; color: #44ff88; letter-spacing: 3px; }
+  .awareness-logo-sub { font-family: 'Share Tech Mono', monospace; font-size: 10px; color: var(--green); letter-spacing: 3px; }
   .awareness-text { font-size: 14px; line-height: 1.8; color: #aaa; }
   .awareness-text strong { color: #fff; font-weight: 600; }
 
@@ -275,6 +288,20 @@
 </style>
 </head>
 <body>
+
+<!-- POPUP -->
+<div class="popup-overlay" id="popup">
+  <div class="popup-card">
+    <span class="popup-icon">✅</span>
+    <div class="popup-tag">Hansgrohe IT Security</div>
+    <div class="popup-title">Keine Sorge –<br>das war ein <span>Test!</span></div>
+    <p class="popup-text">
+      Ihr habt gerade an einer <strong>Sicherheitsbewusstseins-Kampagne</strong> der Hansgrohe SE teilgenommen.<br><br>
+      Lest weiter — wir erklären euch, was passiert wäre.
+    </p>
+    <button class="popup-btn" onclick="closePopup()">✕ &nbsp;Schließen</button>
+  </div>
+</div>
 
 <div class="bg-grid"></div>
 <div class="corner tl"></div>
@@ -379,5 +406,14 @@
   </div>
 
 </div>
+
+<script>
+  function closePopup() {
+    const popup = document.getElementById('popup');
+    popup.classList.add('hiding');
+    setTimeout(() => popup.remove(), 400);
+  }
+</script>
+
 </body>
 </html>
